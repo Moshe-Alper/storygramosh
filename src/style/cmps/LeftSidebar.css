@@ -65,6 +65,22 @@
     border-color: var(--clr-text);
   }
 
+  .nav-icon-wrapper {
+    position: relative;
+    display: inline-flex;
+  }
+
+  .unread-dot {
+    position: absolute;
+    inset-block-start: -2px;
+    inset-inline-end: -2px;
+    width: 8px;
+    height: 8px;
+    background: var(--clr-error);
+    border-radius: var(--radius-round);
+    border: 2px solid var(--clr-bg);
+  }
+
   .sidebar-footer {
     display: flex;
     flex-direction: column;

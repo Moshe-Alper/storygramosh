@@ -7,9 +7,12 @@ interface Props {
   onCreateClick?: () => void
   onSearchClick?: () => void
   searchOpen?: boolean
+  onNotificationsClick?: () => void
+  notificationsOpen?: boolean
+  hasUnreadNotifications?: boolean
 }
 
-export function LeftSidebar({ onCreateClick, onSearchClick, searchOpen }: Props) {
+export function LeftSidebar({ onCreateClick, onSearchClick, searchOpen, onNotificationsClick, notificationsOpen, hasUnreadNotifications }: Props) {
   const user = useAuthStore(s => s.user)
 
   return (
@@ -36,8 +39,15 @@ export function LeftSidebar({ onCreateClick, onSearchClick, searchOpen }: Props)
           <Compass size={24} />
           <span className="nav-label">Explore</span>
         </NavLink>
-        <button className="nav-item" type="button">
-          <Heart size={24} />
+        <button
+          className={`nav-item${notificationsOpen ? ' active' : ''}`}
+          type="button"
+          onClick={onNotificationsClick}
+        >
+          <div className="nav-icon-wrapper">
+            <Heart size={24} />
+            {hasUnreadNotifications && <span className="unread-dot" />}
+          </div>
           <span className="nav-label">Notifications</span>
         </button>
         <button className="nav-item" type="button" onClick={onCreateClick}>

@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import type { User } from '../types/user.types'
 import * as authService from '../services/auth.service'
+import { seedNotificationsIfNeeded } from '../services/notification.service'
 
 interface AuthState {
   user: User | null
@@ -19,6 +20,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (!user) {
       user = authService.login('moshik_dev')
     }
+    if (user) seedNotificationsIfNeeded(user._id)
     set({ user })
   },
 

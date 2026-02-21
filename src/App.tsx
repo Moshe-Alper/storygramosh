@@ -6,6 +6,7 @@ import { Home } from './pages/Home'
 import { Profile } from './pages/Profile'
 import { Explore } from './pages/Explore'
 import { Search } from './pages/Search'
+import { Notifications } from './pages/Notifications'
 
 function App() {
   const init = useAuthStore(s => s.init)
@@ -20,6 +21,7 @@ function App() {
         <Route element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="search" element={<Search />} />
+          <Route path="notifications" element={<Notifications />} />
           <Route path="explore" element={<Explore />} />
           <Route path=":username" element={<Profile />} />
         </Route>

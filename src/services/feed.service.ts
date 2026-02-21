@@ -2,6 +2,7 @@ import type { Post, Comment } from '../types/post.types'
 import type { MiniUser } from '../types/user.types'
 import { mockPosts } from '../mocks/data'
 import { makeId } from './util.service'
+import { addNotification, removeNotification } from './notification.service'
 
 const POSTS_KEY = 'posts'
 
@@ -47,9 +48,19 @@ export function toggleLike(postId: string, user: MiniUser): Post | undefined {
   if (idx >= 0) {
     post.likes.likedBy.splice(idx, 1)
     post.likes.count--
+    removeNotification('like', user._id, postId)
   } else {
     post.likes.likedBy.push(user)
     post.likes.count++
+    if (post.by._id !== user._id) {
+      addNotification({
+        type: 'like',
+        by: user,
+        targetUserId: post.by._id,
+        postId: post._id,
+        postImgUrl: post.imgUrl,
+      })
+    }
   }
   _savePosts(posts)
   return post
@@ -68,6 +79,18 @@ export function addComment(postId: string, txt: string, by: MiniUser): Comment |
   }
   post.comments.list.push(comment)
   post.comments.count++
+
+  if (post.by._id !== by._id) {
+    addNotification({
+      type: 'comment',
+      by,
+      targetUserId: post.by._id,
+      postId: post._id,
+      postImgUrl: post.imgUrl,
+      commentTxt: txt,
+    })
+  }
+
   _savePosts(posts)
   return comment
 }

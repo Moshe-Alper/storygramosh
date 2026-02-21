@@ -1,5 +1,6 @@
 import type { User, MiniUser } from '../types/user.types'
 import { mockUsers } from '../mocks/data'
+import { addNotification, removeNotification } from './notification.service'
 
 const STORAGE_KEY = 'loggedInUser'
 const USERS_KEY = 'users'
@@ -78,6 +79,7 @@ export function toggleFollow(
     currentUser.followingCount--
     targetUser.followers = targetUser.followers.filter(u => u._id !== currentUserId)
     targetUser.followersCount--
+    removeNotification('follow', currentUserId)
   } else {
     currentUser.following.push({
       _id: targetUser._id,
@@ -93,6 +95,16 @@ export function toggleFollow(
       imgUrl: currentUser.imgUrl,
     })
     targetUser.followersCount++
+    addNotification({
+      type: 'follow',
+      by: {
+        _id: currentUser._id,
+        username: currentUser.username,
+        fullname: currentUser.fullname,
+        imgUrl: currentUser.imgUrl,
+      },
+      targetUserId,
+    })
   }
 
   _saveUsers(users)
