@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   padding: var(--spacing-xl) var(--spacing-lg);
-  gap: var(--spacing-xl);
-  max-width: 60rem;
+  gap: 4rem;
+  max-width: 64rem;
   margin: 0 auto;
 }
 

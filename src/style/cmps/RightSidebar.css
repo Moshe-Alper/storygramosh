@@ -1,6 +1,7 @@
 .right-sidebar {
   width: var(--right-sidebar-width);
   padding: var(--spacing-xl) var(--spacing-lg);
+  padding-inline-start: var(--spacing-xl);
   flex-shrink: 0;
   display: none;
 

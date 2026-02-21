@@ -3,7 +3,11 @@ import { Home, Search, Compass, Heart, PlusSquare, Menu } from 'lucide-react'
 import { useAuthStore } from '../../store/auth.store'
 import { ThemeToggle } from '../ThemeToggle'
 
-export function LeftSidebar() {
+interface Props {
+  onCreateClick?: () => void
+}
+
+export function LeftSidebar({ onCreateClick }: Props) {
   const user = useAuthStore(s => s.user)
 
   return (
@@ -30,7 +34,7 @@ export function LeftSidebar() {
           <Heart size={24} />
           <span className="nav-label">Notifications</span>
         </button>
-        <button className="nav-item" type="button">
+        <button className="nav-item" type="button" onClick={onCreateClick}>
           <PlusSquare size={24} />
           <span className="nav-label">Create</span>
         </button>
