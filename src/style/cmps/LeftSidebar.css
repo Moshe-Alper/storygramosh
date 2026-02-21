@@ -73,6 +73,24 @@
   }
 }
 
+.search-open .left-sidebar {
+  width: var(--sidebar-width-narrow);
+  align-items: center;
+  padding: var(--spacing-lg) var(--spacing-sm);
+
+  .sidebar-logo {
+    .logo-full { display: none; }
+    .logo-icon { display: block; }
+  }
+
+  .nav-label { display: none; }
+
+  .nav-item {
+    justify-content: center;
+    padding: var(--spacing-sm);
+  }
+}
+
 @media (max-width: 1264px) {
   .left-sidebar {
     width: var(--sidebar-width-narrow);

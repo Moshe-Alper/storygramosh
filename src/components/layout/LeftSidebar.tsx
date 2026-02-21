@@ -5,9 +5,11 @@ import { ThemeToggle } from '../ThemeToggle'
 
 interface Props {
   onCreateClick?: () => void
+  onSearchClick?: () => void
+  searchOpen?: boolean
 }
 
-export function LeftSidebar({ onCreateClick }: Props) {
+export function LeftSidebar({ onCreateClick, onSearchClick, searchOpen }: Props) {
   const user = useAuthStore(s => s.user)
 
   return (
@@ -22,7 +24,11 @@ export function LeftSidebar({ onCreateClick }: Props) {
           <Home size={24} />
           <span className="nav-label">Home</span>
         </NavLink>
-        <button className="nav-item" type="button">
+        <button
+          className={`nav-item${searchOpen ? ' active' : ''}`}
+          type="button"
+          onClick={onSearchClick}
+        >
           <Search size={24} />
           <span className="nav-label">Search</span>
         </button>

@@ -3,6 +3,8 @@ import { mockUsers } from '../mocks/data'
 
 const STORAGE_KEY = 'loggedInUser'
 const USERS_KEY = 'users'
+const RECENT_SEARCHES_KEY = 'recentSearches'
+const MAX_RECENT = 10
 
 export function getUsers(): User[] {
   try {
@@ -99,6 +101,48 @@ export function toggleFollow(
   } catch { /* restricted storage */ }
 
   return { currentUser, targetUser }
+}
+
+export function searchUsers(query: string): MiniUser[] {
+  if (!query.trim()) return []
+
+  const term = query.toLowerCase()
+  return getUsers()
+    .filter(u =>
+      u.username.toLowerCase().includes(term) ||
+      u.fullname.toLowerCase().includes(term)
+    )
+    .map(u => ({ _id: u._id, username: u.username, fullname: u.fullname, imgUrl: u.imgUrl }))
+}
+
+export function getRecentSearches(): MiniUser[] {
+  try {
+    const stored = localStorage.getItem(RECENT_SEARCHES_KEY)
+    if (stored) return JSON.parse(stored)
+  } catch { /* restricted storage */ }
+  return []
+}
+
+export function addRecentSearch(user: MiniUser): void {
+  const recent = getRecentSearches().filter(u => u._id !== user._id)
+  recent.unshift(user)
+  if (recent.length > MAX_RECENT) recent.pop()
+  try {
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent))
+  } catch { /* restricted storage */ }
+}
+
+export function removeRecentSearch(userId: string): void {
+  const recent = getRecentSearches().filter(u => u._id !== userId)
+  try {
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent))
+  } catch { /* restricted storage */ }
+}
+
+export function clearRecentSearches(): void {
+  try {
+    localStorage.removeItem(RECENT_SEARCHES_KEY)
+  } catch { /* restricted storage */ }
 }
 
 export function getSuggestedUsers(currentUserId: string): MiniUser[] {

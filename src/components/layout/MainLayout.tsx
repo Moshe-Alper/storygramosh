@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 import { useAuthStore } from '../../store/auth.store'
 import { LeftSidebar } from './LeftSidebar'
 import { CreatePostModal } from '../ui/CreatePostModal'
+import { SearchPanel } from '../ui/SearchPanel'
 import type { Post } from '../../types/post.types'
 
 export interface OutletContext {
@@ -12,6 +13,7 @@ export interface OutletContext {
 export function MainLayout() {
   const user = useAuthStore(s => s.user)
   const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
   const postCreatedRef = useRef<((post: Post) => void) | null>(null)
 
   const registerPostCreated = useCallback((cb: (post: Post) => void) => {
@@ -28,11 +30,21 @@ export function MainLayout() {
     : null
 
   return (
-    <div className="app-layout">
-      <LeftSidebar onCreateClick={() => setCreateModalOpen(true)} />
+    <div className={`app-layout${searchOpen ? ' search-open' : ''}`}>
+      <LeftSidebar
+        onCreateClick={() => setCreateModalOpen(true)}
+        onSearchClick={() => setSearchOpen(true)}
+        searchOpen={searchOpen}
+      />
       <main className="main-content">
         <Outlet context={{ registerPostCreated } satisfies OutletContext} />
       </main>
+      {searchOpen && (
+        <>
+          <SearchPanel onClose={() => setSearchOpen(false)} />
+          <div className="search-backdrop" onClick={() => setSearchOpen(false)} />
+        </>
+      )}
       {createModalOpen && miniUser && (
         <CreatePostModal
           currentUser={miniUser}
