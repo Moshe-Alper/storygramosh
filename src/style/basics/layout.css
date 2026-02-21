@@ -1,14 +1,27 @@
 body {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 100dvh;
   color: var(--clr-text);
   background-color: var(--clr-bg);
-  color-scheme: light dark;
 }
 
 #root {
   width: 100%;
-  position: relative;
+  min-height: 100dvh;
+}
+
+.app-layout {
+  display: flex;
+  min-height: 100dvh;
+}
+
+.main-content {
+  flex: 1;
+  margin-inline-start: var(--sidebar-width);
+  min-height: 100dvh;
+}
+
+@media (max-width: 1264px) {
+  .main-content {
+    margin-inline-start: var(--sidebar-width-narrow);
+  }
 }

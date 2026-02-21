@@ -10,4 +10,10 @@
 @import './basics/button.css';
 
 /* Components */
-@import './cmps/ThemeToggle.css';
+@import './cmps/LeftSidebar.css';
+@import './cmps/RightSidebar.css';
+@import './cmps/StoriesRow.css';
+@import './cmps/PostCard.css';
+@import './cmps/Home.css';
+@import './cmps/Profile.css';
+@import './cmps/Explore.css';

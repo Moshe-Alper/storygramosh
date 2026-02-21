@@ -15,8 +15,9 @@ export function ThemeToggle() {
   }
 
   return (
-    <button className="theme-toggle" onClick={onToggleTheme} aria-label="Toggle theme">
-      {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+    <button className="nav-item theme-toggle-btn" onClick={onToggleTheme} aria-label="Toggle theme" type="button">
+      {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+      <span className="nav-label">{theme === 'dark' ? 'Light mode' : 'Dark mode'}</span>
     </button>
   )
 }

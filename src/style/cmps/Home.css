@@ -1,0 +1,18 @@
+.home-page {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-xl) var(--spacing-lg);
+  gap: var(--spacing-xl);
+  max-width: 60rem;
+  margin: 0 auto;
+}
+
+.home-feed {
+  width: 100%;
+  max-width: var(--feed-max-width);
+}
+
+.feed-posts {
+  display: flex;
+  flex-direction: column;
+}

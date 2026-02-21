@@ -1,14 +1,28 @@
-import { ThemeToggle } from './components/ThemeToggle'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useAuthStore } from './store/auth.store'
+import { MainLayout } from './components/layout/MainLayout'
+import { Home } from './pages/Home'
+import { Profile } from './pages/Profile'
+import { Explore } from './pages/Explore'
 
 function App() {
+  const init = useAuthStore(s => s.init)
+
+  useEffect(() => {
+    init()
+  }, [init])
+
   return (
-    <>
-      <ThemeToggle />
-      <div className="hero">
-        <h1>Storygramosh</h1>
-        <p className="subtitle">coming soon</p>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="explore" element={<Explore />} />
+          <Route path=":username" element={<Profile />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
