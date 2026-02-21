@@ -100,6 +100,39 @@ export function getLikedPosts(userId: string): Post[] {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
+export function toggleCommentLike(postId: string, commentId: string, user: MiniUser): Post | undefined {
+  const posts = getPosts()
+  const post = posts.find(p => p._id === postId)
+  if (!post) return undefined
+
+  const comment = post.comments.list.find(c => c._id === commentId)
+  if (!comment) return undefined
+
+  if (!comment.likedBy) comment.likedBy = []
+  const idx = comment.likedBy.findIndex(u => u._id === user._id)
+  if (idx >= 0) {
+    comment.likedBy.splice(idx, 1)
+  } else {
+    comment.likedBy.push(user)
+  }
+  _savePosts(posts)
+  return post
+}
+
+export function deleteComment(postId: string, commentId: string): Post | undefined {
+  const posts = getPosts()
+  const post = posts.find(p => p._id === postId)
+  if (!post) return undefined
+
+  const idx = post.comments.list.findIndex(c => c._id === commentId)
+  if (idx < 0) return undefined
+
+  post.comments.list.splice(idx, 1)
+  post.comments.count--
+  _savePosts(posts)
+  return post
+}
+
 export function createPost(post: Omit<Post, '_id'>): Post {
   const posts = getPosts()
   const newPost: Post = { ...post, _id: `p${makeId(6)}` }

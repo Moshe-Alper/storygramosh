@@ -5,6 +5,7 @@ import type { Post } from '../../types/post.types'
 import type { MiniUser } from '../../types/user.types'
 import { toggleLike, addComment, toggleSave } from '../../services/feed.service'
 import { timeAgo } from '../../services/util.service'
+import { CommentsModal } from './CommentsModal'
 
 interface Props {
   post: Post
@@ -14,6 +15,7 @@ interface Props {
 
 export function PostCard({ post, currentUser, onPostUpdate }: Props) {
   const [commentTxt, setCommentTxt] = useState('')
+  const [commentsModalOpen, setCommentsModalOpen] = useState(false)
   const isLiked = post.likes.likedBy.some(u => u._id === currentUser._id)
   const isSaved = post.savedBy?.includes(currentUser._id) ?? false
 
@@ -106,7 +108,7 @@ export function PostCard({ post, currentUser, onPostUpdate }: Props) {
         )}
 
         {post.comments.count > 2 && (
-          <button className="view-comments" type="button">
+          <button className="view-comments" type="button" onClick={() => setCommentsModalOpen(true)}>
             View all {post.comments.count} comments
           </button>
         )}
@@ -135,6 +137,15 @@ export function PostCard({ post, currentUser, onPostUpdate }: Props) {
           Post
         </button>
       </form>
+
+      {commentsModalOpen && (
+        <CommentsModal
+          post={post}
+          currentUser={currentUser}
+          onClose={() => setCommentsModalOpen(false)}
+          onPostUpdate={(updated) => onPostUpdate?.(updated)}
+        />
+      )}
     </article>
   )
 }
