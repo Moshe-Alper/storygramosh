@@ -8,30 +8,30 @@ When creating or modifying services in this application, follow these patterns:
 
 ## File Location
 - Place services in `src/services/`
-- Name files with `.service.ts` suffix (e.g., `post.service.ts`)
+- Name files with `.service.ts` suffix (e.g., `story.service.ts`)
 - Create corresponding `.test.ts` file for tests
 
 ## Service Pattern
 Services are pure functions, not classes. Export named functions:
 
 ```typescript
-// post.service.ts
-import type { PostData } from '../types/post.types'
+// story.service.ts
+import type { StoryData } from '../types/story.types'
 
-export function savePost(post: PostData): void {
-  const posts = loadPosts()
-  posts.push(post)
-  localStorage.setItem('posts', JSON.stringify(posts))
+export function saveStory(story: StoryData): void {
+  const stories = loadStories()
+  stories.push(story)
+  localStorage.setItem('stories', JSON.stringify(stories))
 }
 
-export function loadPosts(): PostData[] {
-  const stored = localStorage.getItem('posts')
+export function loadStories(): StoryData[] {
+  const stored = localStorage.getItem('stories')
   return stored ? JSON.parse(stored) : []
 }
 
-export function deletePost(id: string): void {
-  const posts = loadPosts().filter(c => c.id !== id)
-  localStorage.setItem('posts', JSON.stringify(posts))
+export function deleteStory(id: string): void {
+  const stories = loadStories().filter(c => c.id !== id)
+  localStorage.setItem('stories', JSON.stringify(stories))
 }
 ```
 
@@ -48,24 +48,24 @@ Place in `src/services/util.service.ts`:
 
 ## Testing Services
 ```typescript
-// post.service.test.ts
+// story.service.test.ts
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { savePost, loadPosts } from './post.service'
+import { saveStory, loadStories } from './story.service'
 
-describe('Post Service', () => {
+describe('Story Service', () => {
   beforeEach(() => {
     localStorage.clear()
   })
 
-  it('should save and load posts', () => {
-    const post = { id: '1', name: 'Test' }
-    savePost(post)
-    expect(loadPosts()).toContainEqual(post)
+  it('should save and load stories', () => {
+    const story = { id: '1', name: 'Test' }
+    saveStory(story)
+    expect(loadStories()).toContainEqual(story)
   })
 })
 ```
 
 ## Type Safety
-- Define types in `src/types/post.types.ts`
+- Define types in `src/types/story.types.ts`
 - Use strict typing for all function parameters and returns
 - Avoid `any` type
