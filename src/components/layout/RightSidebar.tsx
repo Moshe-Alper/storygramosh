@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
 import { useAuthStore } from '../../store/auth.store'
-import { getSuggestedUsers } from '../../services/auth.service'
+import { getSuggestedUsers, toggleFollow } from '../../services/auth.service'
 
 export function RightSidebar() {
   const user = useAuthStore(s => s.user)
+  const refreshUser = useAuthStore(s => s.refreshUser)
   if (!user) return null
 
   const suggested = getSuggestedUsers(user._id)
@@ -35,7 +36,14 @@ export function RightSidebar() {
                     <span className="fullname">{s.fullname}</span>
                   </div>
                 </Link>
-                <button className="btn-follow" type="button">Follow</button>
+                <button
+                  className="btn-follow"
+                  type="button"
+                  onClick={() => {
+                    toggleFollow(user._id, s._id)
+                    refreshUser()
+                  }}
+                >Follow</button>
               </li>
             ))}
           </ul>

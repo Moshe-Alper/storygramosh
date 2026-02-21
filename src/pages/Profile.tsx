@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Grid3X3, Bookmark, Heart } from 'lucide-react'
 import { useAuthStore } from '../store/auth.store'
-import { getUserByUsername } from '../services/auth.service'
+import { getUserByUsername, toggleFollow } from '../services/auth.service'
 import { getUserPosts } from '../services/feed.service'
 import type { User } from '../types/user.types'
 import type { Post } from '../types/post.types'
@@ -12,9 +12,21 @@ type Tab = 'posts' | 'saved' | 'liked'
 export function Profile() {
   const { username } = useParams<{ username: string }>()
   const currentUser = useAuthStore(s => s.user)
+  const refreshUser = useAuthStore(s => s.refreshUser)
   const [profileUser, setProfileUser] = useState<User | null>(null)
   const [posts, setPosts] = useState<Post[]>([])
   const [activeTab, setActiveTab] = useState<Tab>('posts')
+  const [hoveringFollow, setHoveringFollow] = useState(false)
+
+  const isFollowing = currentUser?.following.some(u => u._id === profileUser?._id) ?? false
+
+  function onToggleFollow() {
+    if (!currentUser || !profileUser) return
+    toggleFollow(currentUser._id, profileUser._id)
+    refreshUser()
+    const updated = getUserByUsername(profileUser.username)
+    if (updated) setProfileUser(updated)
+  }
 
   useEffect(() => {
     if (!username) return
@@ -42,8 +54,18 @@ export function Profile() {
             <h2 className="profile-username">{profileUser.username}</h2>
             {isOwnProfile ? (
               <button className="btn-edit-profile" type="button">Edit profile</button>
+            ) : isFollowing ? (
+              <button
+                className="btn-following"
+                type="button"
+                onClick={onToggleFollow}
+                onMouseEnter={() => setHoveringFollow(true)}
+                onMouseLeave={() => setHoveringFollow(false)}
+              >
+                {hoveringFollow ? 'Unfollow' : 'Following'}
+              </button>
             ) : (
-              <button className="btn-follow" type="button">Follow</button>
+              <button className="btn-follow" type="button" onClick={onToggleFollow}>Follow</button>
             )}
           </div>
           <div className="profile-stats">

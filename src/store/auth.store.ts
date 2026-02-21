@@ -7,6 +7,7 @@ interface AuthState {
   login: (username: string) => User | null
   logout: () => void
   init: () => void
+  refreshUser: () => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -30,5 +31,10 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     authService.logout()
     set({ user: null })
+  },
+
+  refreshUser: () => {
+    const user = authService.getLoggedInUser()
+    if (user) set({ user })
   },
 }))

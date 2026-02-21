@@ -58,6 +58,49 @@ export function getUserByUsername(username: string): User | undefined {
   return getUsers().find(u => u.username === username)
 }
 
+export function toggleFollow(
+  currentUserId: string,
+  targetUserId: string
+): { currentUser: User; targetUser: User } | undefined {
+  if (currentUserId === targetUserId) return undefined
+
+  const users = getUsers()
+  const currentUser = users.find(u => u._id === currentUserId)
+  const targetUser = users.find(u => u._id === targetUserId)
+  if (!currentUser || !targetUser) return undefined
+
+  const alreadyFollowing = currentUser.following.some(u => u._id === targetUserId)
+
+  if (alreadyFollowing) {
+    currentUser.following = currentUser.following.filter(u => u._id !== targetUserId)
+    currentUser.followingCount--
+    targetUser.followers = targetUser.followers.filter(u => u._id !== currentUserId)
+    targetUser.followersCount--
+  } else {
+    currentUser.following.push({
+      _id: targetUser._id,
+      username: targetUser.username,
+      fullname: targetUser.fullname,
+      imgUrl: targetUser.imgUrl,
+    })
+    currentUser.followingCount++
+    targetUser.followers.push({
+      _id: currentUser._id,
+      username: currentUser.username,
+      fullname: currentUser.fullname,
+      imgUrl: currentUser.imgUrl,
+    })
+    targetUser.followersCount++
+  }
+
+  _saveUsers(users)
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(currentUser))
+  } catch { /* restricted storage */ }
+
+  return { currentUser, targetUser }
+}
+
 export function getSuggestedUsers(currentUserId: string): MiniUser[] {
   const users = getUsers()
   const currentUser = users.find(u => u._id === currentUserId)
