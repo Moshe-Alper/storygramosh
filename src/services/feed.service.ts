@@ -88,6 +88,18 @@ export function toggleSave(postId: string, userId: string): boolean {
   return post.savedBy.includes(userId)
 }
 
+export function getSavedPosts(userId: string): Post[] {
+  return getPosts()
+    .filter(post => post.savedBy?.includes(userId))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
+export function getLikedPosts(userId: string): Post[] {
+  return getPosts()
+    .filter(post => post.likes.likedBy.some(u => u._id === userId))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+}
+
 export function createPost(post: Omit<Post, '_id'>): Post {
   const posts = getPosts()
   const newPost: Post = { ...post, _id: `p${makeId(6)}` }

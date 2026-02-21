@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import { Grid3X3, Bookmark, Heart } from 'lucide-react'
 import { useAuthStore } from '../store/auth.store'
 import { getUserByUsername, toggleFollow } from '../services/auth.service'
-import { getUserPosts } from '../services/feed.service'
+import { getUserPosts, getSavedPosts, getLikedPosts } from '../services/feed.service'
 import type { User } from '../types/user.types'
 import type { Post } from '../types/post.types'
 
@@ -31,11 +31,23 @@ export function Profile() {
   useEffect(() => {
     if (!username) return
     const found = getUserByUsername(username)
-    if (found) {
-      setProfileUser(found)
-      setPosts(getUserPosts(found._id))
-    }
+    if (found) setProfileUser(found)
   }, [username])
+
+  useEffect(() => {
+    if (!profileUser) return
+    switch (activeTab) {
+      case 'posts':
+        setPosts(getUserPosts(profileUser._id))
+        break
+      case 'saved':
+        setPosts(getSavedPosts(profileUser._id))
+        break
+      case 'liked':
+        setPosts(getLikedPosts(profileUser._id))
+        break
+    }
+  }, [activeTab, profileUser])
 
   if (!profileUser) {
     return <div className="profile-not-found">User not found</div>
@@ -117,7 +129,7 @@ export function Profile() {
       </div>
 
       <div className="profile-grid">
-        {activeTab === 'posts' && posts.map(post => (
+        {posts.length > 0 ? posts.map(post => (
           <div key={post._id} className="profile-grid-item">
             <img src={post.imgUrl} alt={post.caption ?? 'Post'} loading="lazy" />
             <div className="grid-item-overlay">
@@ -125,8 +137,7 @@ export function Profile() {
               <span><MessageIcon /> {post.comments.count}</span>
             </div>
           </div>
-        ))}
-        {activeTab !== 'posts' && (
+        )) : (
           <div className="profile-empty">
             <p>No {activeTab} posts yet</p>
           </div>
