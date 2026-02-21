@@ -1,0 +1,13 @@
+- Use modern CSS: flex, grid, prefer ems, use variables for all colors
+- Use modern CSS nesting (https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Nesting/Using) 
+- Use plain CSS files (no CSS-in-JS or CSS modules). 
+- Create a main.css under style folder and import it in the root of the app. 
+- under style folder, create the following folders: setup, basics, cmps
+   - in setup have var.css, typography.css
+   - in basics have reset.css, helper.css, layout.css, base.css, button.css
+- For component-specific styles, create a separate CSS file under style/cmps and import it from the main.css.
+
+- No inline styles unless absolutely necessary (such as dynamic colors in the editor)
+- Use lucide icons
+
+- This app support light and dark themes, so use CSS variables for all colors and switch them based on the theme from the store.
