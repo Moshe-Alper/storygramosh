@@ -1,0 +1,14 @@
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-text);
+  background-color: var(--clr-bg);
+  color-scheme: light dark;
+}
+
+#root {
+  width: 100%;
+  position: relative;
+}
