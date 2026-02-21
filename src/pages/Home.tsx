@@ -6,14 +6,21 @@ import { seedPostsIfNeeded } from '../services/feed.service'
 import { seedStoriesIfNeeded } from '../services/story.service'
 import { PostCard } from '../components/ui/PostCard'
 import { StoriesRow } from '../components/ui/StoriesRow'
+import { StoryViewer } from '../components/ui/StoryViewer'
 import { RightSidebar } from '../components/layout/RightSidebar'
 import type { Post } from '../types/post.types'
 import type { Story } from '../types/story.types'
+import type { MiniUser } from '../types/user.types'
 
 export function Home() {
   const user = useAuthStore(s => s.user)
   const [posts, setPosts] = useState<Post[]>([])
   const [stories, setStories] = useState<Story[]>([])
+  const [storyViewer, setStoryViewer] = useState<{
+    open: boolean
+    initialUserIndex: number
+    userOrder: MiniUser[]
+  }>({ open: false, initialUserIndex: 0, userOrder: [] })
 
   useEffect(() => {
     if (!user) return
@@ -28,6 +35,17 @@ export function Home() {
     setPosts(prev => prev.map(p => p._id === updated._id ? updated : p))
   }, [])
 
+  const handleStoryClick = useCallback((userIndex: number, userOrder: MiniUser[]) => {
+    setStoryViewer({ open: true, initialUserIndex: userIndex, userOrder })
+  }, [])
+
+  const handleStoryViewerClose = useCallback(() => {
+    setStoryViewer(prev => ({ ...prev, open: false }))
+    if (!user) return
+    const followingIds = user.following.map(u => u._id)
+    setStories(getHomeStories(followingIds, user._id))
+  }, [user])
+
   if (!user) return null
 
   const miniUser = {
@@ -40,7 +58,11 @@ export function Home() {
   return (
     <div className="home-page">
       <div className="home-feed">
-        <StoriesRow stories={stories} currentUserId={user._id} />
+        <StoriesRow
+          stories={stories}
+          currentUserId={user._id}
+          onStoryClick={handleStoryClick}
+        />
         <div className="feed-posts">
           {posts.map(post => (
             <PostCard
@@ -53,6 +75,15 @@ export function Home() {
         </div>
       </div>
       <RightSidebar />
+      {storyViewer.open && (
+        <StoryViewer
+          stories={stories}
+          initialUserIndex={storyViewer.initialUserIndex}
+          userOrder={storyViewer.userOrder}
+          currentUserId={user._id}
+          onClose={handleStoryViewerClose}
+        />
+      )}
     </div>
   )
 }
