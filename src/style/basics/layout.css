@@ -25,3 +25,10 @@ body {
     margin-inline-start: var(--sidebar-width-narrow);
   }
 }
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-inline-start: 0;
+    padding-block-end: 3.5rem;
+  }
+}

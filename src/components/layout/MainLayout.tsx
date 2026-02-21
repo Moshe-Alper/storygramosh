@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 import { useAuthStore } from '../../store/auth.store'
 import { LeftSidebar } from './LeftSidebar'
+import { BottomNav } from './BottomNav'
 import { CreatePostModal } from '../ui/CreatePostModal'
 import { SearchPanel } from '../ui/SearchPanel'
 import type { Post } from '../../types/post.types'
@@ -39,6 +40,7 @@ export function MainLayout() {
       <main className="main-content">
         <Outlet context={{ registerPostCreated } satisfies OutletContext} />
       </main>
+      <BottomNav onCreateClick={() => setCreateModalOpen(true)} />
       {searchOpen && (
         <>
           <SearchPanel onClose={() => setSearchOpen(false)} />

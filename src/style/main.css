@@ -11,6 +11,7 @@
 
 /* Components */
 @import './cmps/LeftSidebar.css';
+@import './cmps/BottomNav.css';
 @import './cmps/RightSidebar.css';
 @import './cmps/StoriesRow.css';
 @import './cmps/PostCard.css';
