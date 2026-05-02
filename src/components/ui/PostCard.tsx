@@ -16,12 +16,21 @@ interface Props {
 export function PostCard({ post, currentUser, onPostUpdate }: Props) {
   const [commentTxt, setCommentTxt] = useState('')
   const [commentsModalOpen, setCommentsModalOpen] = useState(false)
+  const [showHeart, setShowHeart] = useState(false)
   const isLiked = post.likes.likedBy.some(u => u._id === currentUser._id)
   const isSaved = post.savedBy?.includes(currentUser._id) ?? false
 
   function onLike() {
     const updated = toggleLike(post._id, currentUser)
     if (updated) onPostUpdate?.(updated)
+  }
+
+  function onDoubleTap() {
+    if (!isLiked) {
+      setShowHeart(true)
+      setTimeout(() => setShowHeart(false), 900)
+    }
+    onLike()
   }
 
   function onSave() {
@@ -66,8 +75,9 @@ export function PostCard({ post, currentUser, onPostUpdate }: Props) {
           src={post.imgUrl}
           alt={post.caption ?? 'Post image'}
           loading="lazy"
-          onDoubleClick={onLike}
+          onDoubleClick={onDoubleTap}
         />
+        {showHeart && <div className="heart-burst">❤️</div>}
       </div>
 
       <div className="post-actions">
